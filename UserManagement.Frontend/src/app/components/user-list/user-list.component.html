@@ -16,15 +16,27 @@
       <mat-icon matSuffix>email</mat-icon>
     </mat-form-field>
 
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="openUserForm()"
-      class="add-button"
-    >
-      <mat-icon>add</mat-icon>
-      Add User
-    </button>
+    <div class="action-buttons">
+      <button
+        mat-raised-button
+        color="accent"
+        (click)="importUsers()"
+        [disabled]="loading"
+      >
+        <mat-icon>cloud_download</mat-icon>
+        Import Users
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="openUserForm()"
+        class="add-button"
+      >
+        <mat-icon>add</mat-icon>
+        Add User
+      </button>
+    </div>
   </div>
 
   <div class="table-container" *ngIf="!loading">
