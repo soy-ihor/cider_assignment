@@ -1,0 +1,40 @@
+@import "@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.success-snackbar {
+  background: #4caf50;
+  color: white;
+}
+
+.error-snackbar {
+  background: #f44336;
+  color: white;
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.mat-mdc-dialog-container {
+  .mat-mdc-dialog-content {
+    padding: 1.5rem;
+  }
+}
+
+.mat-mdc-dialog-actions {
+  padding: 1rem 1.5rem;
+}

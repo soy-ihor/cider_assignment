@@ -1,0 +1,11 @@
+<button
+  mat-raised-button
+  color="accent"
+  (click)="importUsers()"
+  [disabled]="loading"
+>
+  <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+  <mat-icon *ngIf="!loading">cloud_download</mat-icon>
+  <span *ngIf="!loading">Import users</span>
+  <span *ngIf="loading">Importing...</span>
+</button>
