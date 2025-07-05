@@ -167,13 +167,14 @@ export class UserTableComponent implements OnInit, OnDestroy {
 
   drop(event: CdkDragDrop<User[]>): void {
     const prevData = [...this.dataSource.data];
+
     moveItemInArray(
       this.dataSource.data,
       event.previousIndex,
       event.currentIndex
     );
     this.dataSource._updateChangeSubscription();
-    // Send new order to server
+
     this.userApi
       .reorderUsers({ userIds: this.dataSource.data.map((u) => u.id) })
       .pipe(takeUntil(this.destroy$))
@@ -182,7 +183,6 @@ export class UserTableComponent implements OnInit, OnDestroy {
           this.showMessage('User order updated', 'success');
         },
         error: () => {
-          // Revert order on error
           this.dataSource.data = prevData;
           this.dataSource._updateChangeSubscription();
           this.showMessage('Error updating user order', 'error');

@@ -8,35 +8,11 @@
   }
 }
 
-mat-dialog-content {
-  min-width: $dialog-min-width;
-  max-width: $dialog-max-width;
-  padding: $dialog-padding 0;
-}
-
 mat-dialog-actions {
   padding: $dialog-padding 0;
-  margin: 0;
   justify-content: center;
-  gap: $spacing-sm;
 }
 
 button[type="submit"] {
   min-width: $button-min-width;
-}
-
-@media (max-width: $breakpoint-sm) {
-  mat-dialog-content {
-    min-width: $dialog-mobile-min-width;
-    max-width: 100%;
-    padding: $spacing-sm 0;
-  }
-
-  .form-row {
-    margin-bottom: $spacing-md;
-  }
-
-  mat-dialog-actions {
-    padding: $spacing-md 0;
-  }
 }

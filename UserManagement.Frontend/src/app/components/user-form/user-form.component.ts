@@ -8,7 +8,7 @@ import {
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { UserApiService } from '../../services/user-api.service';
 import { User } from '../../models/user.model';
 import { UserValidators } from '../../validators/user.validators';
@@ -62,45 +62,41 @@ export class UserFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.userForm.valid) {
-      this.loading = true;
-      const userData = this.userForm.value;
-
-      if (this.isEdit && this.data.user) {
-        this.userApi
-          .updateUser(this.data.user.id, userData)
-          .pipe(takeUntil(this.destroy$))
-          .subscribe({
-            next: () => {
-              this.showMessage(
-                `User '${userData.name}' updated successfully`,
-                'success'
-              );
-              this.dialogRef.close(true);
-              this.loading = false;
-            },
-            error: () => {
-              this.showMessage('Error updating user', 'error');
-              this.loading = false;
-            },
-          });
-      } else {
-        this.userApi
-          .createUser(userData)
-          .pipe(takeUntil(this.destroy$))
-          .subscribe({
-            next: () => {
-              this.showMessage('User created successfully', 'success');
-              this.dialogRef.close(true);
-              this.loading = false;
-            },
-            error: () => {
-              this.showMessage('Error creating user', 'error');
-              this.loading = false;
-            },
-          });
-      }
+    if (this.userForm.invalid) {
+      return;
     }
+
+    this.loading = true;
+    const userData = this.userForm.value;
+
+    const request$ =
+      this.isEdit && this.data.user
+        ? this.userApi.updateUser(this.data.user.id, userData)
+        : this.userApi.createUser(userData);
+
+    request$
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => (this.loading = false))
+      )
+      .subscribe({
+        next: () => {
+          this.showMessage(
+            `User '${userData.name}' ${
+              this.isEdit ? 'updated' : 'created'
+            } successfully`,
+            'success'
+          );  
+          this.dialogRef.close(true);
+        },
+        error: () => {
+          this,
+            this.showMessage(
+              `Error during ${this.isEdit ? 'updating' : 'creating'}`,
+              'error'
+            );
+        },
+      });
   }
 
   onCancel(): void {
