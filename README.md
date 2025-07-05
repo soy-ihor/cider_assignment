@@ -29,7 +29,7 @@ A full-stack user management application built with .NET 8 and Angular, followin
 - **Angular CDK** - Drag and drop functionality
 - **RxJS** - Reactive programming
 
-## Getting Started
+## Setup Instructions
 
 ### Prerequisites
 
@@ -107,3 +107,24 @@ The backend follows Clean Architecture principles with proper separation of conc
 - **Controllers** - Thin controllers with minimal logic
 - **Middleware** - CORS and exception handling
 - **Extensions** - Service collection configuration
+
+## Implementation Assumptions
+
+1. **UI Framework:** Used Angular Material for consistent and accessible UI components
+2. **State Management:** Used simple service-based state management (no NgRx for this scope)
+3. **Form Validation:** Implemented reactive forms with custom validators
+4. **Responsive Design:** Assumed mobile-first approach with Material Design breakpoints
+5. **Error Handling:** Used snackbar notifications for user feedback
+6. **Drag & Drop:** Used Angular CDK for drag and drop functionality
+
+## Time Spent Breakdown
+
+- **Backend Development:** 2.5 hours
+- **Frontend Development:** 2.5 hours
+- **General Setup & Documentation:** 1 hour
+
+**Total Time: 6 hours**
+
+## Challenges Encountered and Solutions
+
+The main challenge was the 3-hour time constraint for this assignment. To meet the deadline and deliver a complete, functional application, CursorAI was used to accelerate the development process by generating the initial project skeleton, basic CRUD operations, and foundational code structure. This allowed for faster iteration and focus on implementing the core features and Clean Architecture principles within the limited timeframe.

@@ -18,6 +18,7 @@ $dialog-padding: 16px;
 // Sizes
 $avatar-size: 32px;
 $avatar-size-mobile: 24px;
+$avatar-size-large: 60px;
 $icon-size: 48px;
 $button-height: 36px;
 $button-min-width: 100px;
@@ -29,6 +30,7 @@ $border-radius: 8px;
 
 // Shadows
 $box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+$avatar-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 $drag-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
   0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
 
@@ -66,6 +68,14 @@ $color-border: #e0e0e0;
 $color-background: #fff;
 $color-surface: #f5f5f5;
 $color-hover: #f5f5f5;
+
+// Avatar colors
+$color-avatar-section-bg: #f5f5f5;
+$color-avatar-section-border: #e0e0e0;
+$color-avatar-info-bg: #e3f2fd;
+$color-avatar-info-border: #bbdefb;
+$color-avatar-icon: #1976d2;
+$color-avatar-label: #1976d2;
 
 // Layout
 $container-max-width: 1200px;

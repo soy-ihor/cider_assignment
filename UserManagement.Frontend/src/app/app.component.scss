@@ -1,3 +1,5 @@
+@import "./styles/variables.scss";
+
 .app-container {
   min-height: 100vh;
   display: flex;
@@ -5,20 +7,20 @@
 }
 
 .app-header {
-  background-color: #1976d2;
+  background-color: $color-primary;
   color: white;
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: $spacing-lg $spacing-xxl;
+  box-shadow: $avatar-shadow;
 
   h1 {
     margin: 0;
-    font-size: 1.5rem;
-    font-weight: 500;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
   }
 }
 
 .app-main {
   flex: 1;
-  padding: 2rem;
-  background-color: #f5f5f5;
+  padding: $spacing-xxl;
+  background-color: $color-surface;
 }

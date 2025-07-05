@@ -2,6 +2,37 @@
 
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
   <mat-dialog-content>
+    <!-- Avatar Section -->
+    <div class="avatar-section" *ngIf="isEdit && data.user">
+      <div class="avatar-container">
+        <img
+          [src]="data.user.avatarUrl"
+          [alt]="data.user.name"
+          class="avatar-preview"
+        />
+        <div class="avatar-info">
+          <p class="avatar-label">Current Avatar</p>
+          <p class="avatar-note">
+            Avatar is automatically generated based on email
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Avatar Info for Create Mode -->
+    <div class="avatar-info-section" *ngIf="!isEdit">
+      <div class="avatar-info-container">
+        <mat-icon class="avatar-icon">account_circle</mat-icon>
+        <div class="avatar-info">
+          <p class="avatar-label">Avatar Information</p>
+          <p class="avatar-note">
+            Avatar will be automatically generated based on the email address
+            you provide
+          </p>
+        </div>
+      </div>
+    </div>
+
     <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
