@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -6,6 +6,9 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { UserApiService } from '../../services/user-api.service';
 import { User } from '../../models/user.model';
 import { UserValidators } from '../../validators/user.validators';
@@ -21,17 +24,19 @@ export interface UserFormData {
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.scss'],
 })
-export class UserFormComponent implements OnInit {
+export class UserFormComponent implements OnInit, OnDestroy {
   userForm!: FormGroup;
   loading = false;
   isEdit: boolean;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
     private userApi: UserApiService,
     private dialogRef: MatDialogRef<UserFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: UserFormData,
-    private validationService: ValidationMessageService
+    private validationService: ValidationMessageService,
+    private snackBar: MatSnackBar
   ) {
     this.isEdit = data.isEdit;
   }
@@ -41,6 +46,11 @@ export class UserFormComponent implements OnInit {
     if (this.isEdit && this.data.user) {
       this.userForm.patchValue(this.data.user);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private initForm(): void {
@@ -57,25 +67,38 @@ export class UserFormComponent implements OnInit {
       const userData = this.userForm.value;
 
       if (this.isEdit && this.data.user) {
-        this.userApi.updateUser(this.data.user.id, userData).subscribe({
-          next: () => {
-            this.dialogRef.close(true);
-            this.loading = false;
-          },
-          error: () => {
-            this.loading = false;
-          },
-        });
+        this.userApi
+          .updateUser(this.data.user.id, userData)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              this.showMessage(
+                `User '${userData.name}' updated successfully`,
+                'success'
+              );
+              this.dialogRef.close(true);
+              this.loading = false;
+            },
+            error: () => {
+              this.showMessage('Error updating user', 'error');
+              this.loading = false;
+            },
+          });
       } else {
-        this.userApi.createUser(userData).subscribe({
-          next: () => {
-            this.dialogRef.close(true);
-            this.loading = false;
-          },
-          error: () => {
-            this.loading = false;
-          },
-        });
+        this.userApi
+          .createUser(userData)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              this.showMessage('User created successfully', 'success');
+              this.dialogRef.close(true);
+              this.loading = false;
+            },
+            error: () => {
+              this.showMessage('Error creating user', 'error');
+              this.loading = false;
+            },
+          });
       }
     }
   }
@@ -84,7 +107,18 @@ export class UserFormComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  getErrorMessage(control: AbstractControl, fieldName: string): string {
+  getErrorMessage(controlName: string, fieldName: string): string {
+    const control = this.userForm.get(controlName) as AbstractControl;
     return this.validationService.getErrorMessage(control, fieldName);
+  }
+
+  private showMessage(message: string, type: 'success' | 'error'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      panelClass:
+        type === 'success' ? ['success-snackbar'] : ['error-snackbar'],
+    });
   }
 }

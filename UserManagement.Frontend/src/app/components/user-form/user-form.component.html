@@ -9,7 +9,7 @@
         <mat-error
           *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched"
         >
-          {{ getErrorMessage(userForm.get("name")!, "Name") }}
+          {{ getErrorMessage("name", "Name") }}
         </mat-error>
       </mat-form-field>
     </div>
@@ -28,7 +28,7 @@
             userForm.get('email')?.invalid && userForm.get('email')?.touched
           "
         >
-          {{ getErrorMessage(userForm.get("email")!, "Email") }}
+          {{ getErrorMessage("email", "Email") }}
         </mat-error>
       </mat-form-field>
     </div>
@@ -47,14 +47,16 @@
             userForm.get('username')?.touched
           "
         >
-          {{ getErrorMessage(userForm.get("username")!, "Username") }}
+          {{ getErrorMessage("username", "Username") }}
         </mat-error>
       </mat-form-field>
     </div>
   </mat-dialog-content>
 
-  <mat-dialog-actions align="end">
-    <button mat-button type="button" (click)="onCancel()">Cancel</button>
+  <mat-dialog-actions>
+    <button mat-raised-button color="basic" type="button" (click)="onCancel()">
+      Cancel
+    </button>
     <button
       mat-raised-button
       color="primary"

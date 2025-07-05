@@ -1,5 +1,7 @@
+@import "../../styles/variables.scss";
+
 .form-row {
-  margin-bottom: 16px;
+  margin-bottom: $spacing-lg;
 
   mat-form-field {
     width: 100%;
@@ -7,38 +9,34 @@
 }
 
 mat-dialog-content {
-  min-width: 400px;
-  max-width: 600px;
-  padding: 16px 0;
+  min-width: $dialog-min-width;
+  max-width: $dialog-max-width;
+  padding: $dialog-padding 0;
 }
 
 mat-dialog-actions {
-  padding: 16px 0;
+  padding: $dialog-padding 0;
   margin: 0;
+  justify-content: center;
+  gap: $spacing-sm;
 }
 
 button[type="submit"] {
-  min-width: 100px;
+  min-width: $button-min-width;
 }
 
-.mat-mdc-dialog-actions {
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-// Responsive design
-@media (max-width: 600px) {
+@media (max-width: $breakpoint-sm) {
   mat-dialog-content {
-    min-width: 300px;
+    min-width: $dialog-mobile-min-width;
     max-width: 100%;
-    padding: 8px 0;
+    padding: $spacing-sm 0;
   }
 
   .form-row {
-    margin-bottom: 12px;
+    margin-bottom: $spacing-md;
   }
 
   mat-dialog-actions {
-    padding: 12px 0;
+    padding: $spacing-md 0;
   }
 }

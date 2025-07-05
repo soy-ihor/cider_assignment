@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { UserApiService } from '../../services/user-api.service';
 import { User, PaginatedResponse } from '../../models/user.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FormControl } from '@angular/forms';
-import { debounceTime } from 'rxjs';
+import { Subject } from 'rxjs';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -18,7 +19,7 @@ import {
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.scss'],
 })
-export class UserTableComponent implements OnInit {
+export class UserTableComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
     'rank',
     'avatar',
@@ -34,6 +35,7 @@ export class UserTableComponent implements OnInit {
   loading = false;
   filterName = new FormControl('');
   filterEmail = new FormControl('');
+  private destroy$ = new Subject<void>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -48,20 +50,29 @@ export class UserTableComponent implements OnInit {
     this.setupFilters();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
   }
 
   setupFilters(): void {
-    this.filterName.valueChanges.pipe(debounceTime(300)).subscribe(() => {
-      this.pageIndex = 0;
-      this.loadUsers();
-    });
+    this.filterName.valueChanges
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.pageIndex = 0;
+        this.loadUsers();
+      });
 
-    this.filterEmail.valueChanges.pipe(debounceTime(300)).subscribe(() => {
-      this.pageIndex = 0;
-      this.loadUsers();
-    });
+    this.filterEmail.valueChanges
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.pageIndex = 0;
+        this.loadUsers();
+      });
   }
 
   loadUsers(): void {
@@ -73,6 +84,7 @@ export class UserTableComponent implements OnInit {
         page: this.pageIndex + 1,
         pageSize: this.pageSize,
       })
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: PaginatedResponse<User>) => {
           this.dataSource.data = response.items;
@@ -107,11 +119,14 @@ export class UserTableComponent implements OnInit {
       data: user ? { user, isEdit: true } : { isEdit: false },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.loadUsers();
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((result) => {
+        if (result) {
+          this.loadUsers();
+        }
+      });
   }
 
   editUser(user: User): void {
@@ -120,28 +135,34 @@ export class UserTableComponent implements OnInit {
 
   deleteUser(userId: number): void {
     if (confirm('Are you sure you want to delete this user?')) {
-      this.userApi.deleteUser(userId).subscribe({
-        next: () => {
-          this.showMessage('User deleted successfully', 'success');
-          this.loadUsers();
-        },
-        error: () => {
-          this.showMessage('Error deleting user', 'error');
-        },
-      });
+      this.userApi
+        .deleteUser(userId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.showMessage('User deleted successfully', 'success');
+            this.loadUsers();
+          },
+          error: () => {
+            this.showMessage('Error deleting user', 'error');
+          },
+        });
     }
   }
 
   importUsers(): void {
-    this.userApi.importUsers().subscribe({
-      next: (users) => {
-        this.showMessage(`Imported ${users.length} users`, 'success');
-        this.loadUsers();
-      },
-      error: () => {
-        this.showMessage('Error importing users', 'error');
-      },
-    });
+    this.userApi
+      .importUsers()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (users) => {
+          this.showMessage(`Imported ${users.length} users`, 'success');
+          this.loadUsers();
+        },
+        error: () => {
+          this.showMessage('Error importing users', 'error');
+        },
+      });
   }
 
   drop(event: CdkDragDrop<User[]>): void {
@@ -155,6 +176,7 @@ export class UserTableComponent implements OnInit {
     // Send new order to server
     this.userApi
       .reorderUsers({ userIds: this.dataSource.data.map((u) => u.id) })
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
           this.showMessage('User order updated', 'success');
