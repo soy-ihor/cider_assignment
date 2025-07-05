@@ -16,16 +16,18 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { UserListComponent } from './components/user-list/user-list.component';
 import { UserFormComponent } from './components/user-form/user-form.component';
 import { ImportUsersComponent } from './components/import-users/import-users.component';
+import { UserTableComponent } from './components/user-table/user-table.component';
+import { UserTableHeaderComponent } from './components/user-table/user-table-header/user-table-header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    UserListComponent,
     UserFormComponent,
     ImportUsersComponent,
+    UserTableComponent,
+    UserTableHeaderComponent,
   ],
   imports: [
     BrowserModule,

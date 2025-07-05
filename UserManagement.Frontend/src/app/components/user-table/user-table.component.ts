@@ -14,11 +14,11 @@ import {
 } from '../user-form/user-form.component';
 
 @Component({
-  selector: 'app-user-list',
-  templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss'],
+  selector: 'app-user-table',
+  templateUrl: './user-table.component.html',
+  styleUrls: ['./user-table.component.scss'],
 })
-export class UserListComponent implements OnInit {
+export class UserTableComponent implements OnInit {
   displayedColumns: string[] = [
     'rank',
     'avatar',
@@ -84,6 +84,14 @@ export class UserListComponent implements OnInit {
           this.loading = false;
         },
       });
+  }
+
+  onFilterNameChange(value: string): void {
+    this.filterName.setValue(value);
+  }
+
+  onFilterEmailChange(value: string): void {
+    this.filterEmail.setValue(value);
   }
 
   onPageChange(event: any): void {

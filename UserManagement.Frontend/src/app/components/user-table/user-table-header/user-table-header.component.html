@@ -1,0 +1,35 @@
+<div class="filters-section">
+  <mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <input matInput [formControl]="filterName" placeholder="Filter by name" />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input matInput [formControl]="filterEmail" placeholder="Filter by email" />
+    <mat-icon matSuffix>email</mat-icon>
+  </mat-form-field>
+
+  <div class="action-buttons">
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="onImportUsers()"
+      [disabled]="loading"
+    >
+      <mat-icon>cloud_download</mat-icon>
+      Import Users
+    </button>
+
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onAddUser()"
+      class="add-button"
+    >
+      <mat-icon>add</mat-icon>
+      Add User
+    </button>
+  </div>
+</div>

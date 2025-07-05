@@ -1,26 +1,7 @@
-.user-list-container {
+.user-table-container {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.filters-section {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 20px;
-  align-items: center;
-  flex-wrap: wrap;
-
-  mat-form-field {
-    min-width: 200px;
-  }
-
-  .action-buttons {
-    display: flex;
-    gap: 12px;
-    margin-left: auto;
-    align-items: center;
-  }
 }
 
 .table-container {
@@ -122,16 +103,6 @@ th {
 }
 
 @media (max-width: 768px) {
-  .filters-section {
-    flex-direction: column;
-    align-items: stretch;
-
-    .action-buttons {
-      margin-left: 0;
-      justify-content: center;
-    }
-  }
-
   table {
     font-size: 14px;
   }

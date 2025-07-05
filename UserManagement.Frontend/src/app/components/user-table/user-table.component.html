@@ -1,43 +1,10 @@
-<div class="user-list-container">
-  <div class="filters-section">
-    <mat-form-field appearance="outline">
-      <mat-label>Name</mat-label>
-      <input matInput [formControl]="filterName" placeholder="Filter by name" />
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Email</mat-label>
-      <input
-        matInput
-        [formControl]="filterEmail"
-        placeholder="Filter by email"
-      />
-      <mat-icon matSuffix>email</mat-icon>
-    </mat-form-field>
-
-    <div class="action-buttons">
-      <button
-        mat-raised-button
-        color="accent"
-        (click)="importUsers()"
-        [disabled]="loading"
-      >
-        <mat-icon>cloud_download</mat-icon>
-        Import Users
-      </button>
-
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="openUserForm()"
-        class="add-button"
-      >
-        <mat-icon>add</mat-icon>
-        Add User
-      </button>
-    </div>
-  </div>
+<div class="user-table-container">
+  <app-user-table-header
+    (filterNameChange)="onFilterNameChange($event)"
+    (filterEmailChange)="onFilterEmailChange($event)"
+    (importUsers)="importUsers()"
+    (addUser)="openUserForm()"
+  ></app-user-table-header>
 
   <div class="table-container" *ngIf="!loading">
     <table
@@ -92,10 +59,7 @@
     <div class="no-data" *ngIf="dataSource.data.length === 0">
       <mat-icon>people</mat-icon>
       <h3>No users found</h3>
-      <p>Try changing search parameters or</p>
-      <button mat-raised-button color="primary" (click)="importUsers()">
-        Import users from JSONPlaceholder
-      </button>
+      <p>Try changing search parameters or import users</p>
     </div>
   </div>
 
