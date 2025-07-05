@@ -25,9 +25,6 @@ export class ImportUsersComponent implements OnDestroy {
           this.loading = false;
           this.usersImported.emit(users);
         },
-        error: () => {
-          this.loading = false;
-        },
       });
   }
 

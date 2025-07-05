@@ -16,7 +16,7 @@ import { environment } from '../../environments/environment';
 export class UserApiService {
   private readonly apiUrl = `${environment.apiBaseUrl}/users`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   getUsers(filter: {
     name?: string;

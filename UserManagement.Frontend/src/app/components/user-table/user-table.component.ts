@@ -55,10 +55,6 @@ export class UserTableComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
-
   setupFilters(): void {
     this.filterName.valueChanges
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -90,10 +86,14 @@ export class UserTableComponent implements OnInit, OnDestroy {
           this.dataSource.data = response.items;
           this.totalCount = response.totalCount;
           this.loading = false;
-        },
-        error: () => {
-          this.showMessage('Error loading users', 'error');
-          this.loading = false;
+
+          setTimeout(() => {
+            if (this.paginator) {
+              this.paginator.length = this.totalCount;
+              this.paginator.pageIndex = this.pageIndex;
+              this.paginator.pageSize = this.pageSize;
+            }
+          });
         },
       });
   }
@@ -124,6 +124,9 @@ export class UserTableComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((result) => {
         if (result) {
+          if (!user) {
+            this.pageIndex = 0;
+          }
           this.loadUsers();
         }
       });
@@ -143,9 +146,6 @@ export class UserTableComponent implements OnInit, OnDestroy {
             this.showMessage('User deleted successfully', 'success');
             this.loadUsers();
           },
-          error: () => {
-            this.showMessage('Error deleting user', 'error');
-          },
         });
     }
   }
@@ -158,9 +158,6 @@ export class UserTableComponent implements OnInit, OnDestroy {
         next: (users) => {
           this.showMessage(`Imported ${users.length} users`, 'success');
           this.loadUsers();
-        },
-        error: () => {
-          this.showMessage('Error importing users', 'error');
         },
       });
   }
@@ -185,7 +182,6 @@ export class UserTableComponent implements OnInit, OnDestroy {
         error: () => {
           this.dataSource.data = prevData;
           this.dataSource._updateChangeSubscription();
-          this.showMessage('Error updating user order', 'error');
         },
       });
   }

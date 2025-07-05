@@ -62,41 +62,34 @@ export class UserFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.userForm.invalid) {
-      return;
+    if (this.userForm.valid) {
+      this.loading = true;
+      const userData = this.userForm.value;
+
+      if (this.isEdit && this.data.user) {
+        this.userApi
+          .updateUser(this.data.user.id, userData)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              this.showMessage('User updated successfully', 'success');
+              this.dialogRef.close(true);
+              this.loading = false;
+            },
+          });
+      } else {
+        this.userApi
+          .createUser(userData)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              this.showMessage('User created successfully', 'success');
+              this.dialogRef.close(true);
+              this.loading = false;
+            },
+          });
+      }
     }
-
-    this.loading = true;
-    const userData = this.userForm.value;
-
-    const request$ =
-      this.isEdit && this.data.user
-        ? this.userApi.updateUser(this.data.user.id, userData)
-        : this.userApi.createUser(userData);
-
-    request$
-      .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => (this.loading = false))
-      )
-      .subscribe({
-        next: () => {
-          this.showMessage(
-            `User '${userData.name}' ${
-              this.isEdit ? 'updated' : 'created'
-            } successfully`,
-            'success'
-          );  
-          this.dialogRef.close(true);
-        },
-        error: () => {
-          this,
-            this.showMessage(
-              `Error during ${this.isEdit ? 'updating' : 'creating'}`,
-              'error'
-            );
-        },
-      });
   }
 
   onCancel(): void {
