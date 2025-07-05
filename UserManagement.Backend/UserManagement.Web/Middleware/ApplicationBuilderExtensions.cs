@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using UserManagement.Application.Settings;
 
@@ -25,7 +23,12 @@ public static class ApplicationBuilderExtensions
     public static IApplicationBuilder UseSecurityServices(this IApplicationBuilder app)
     {
         var corsSettings = app.ApplicationServices.GetRequiredService<IOptions<CorsSettings>>().Value;
-        app.UseCors(corsSettings.PolicyName);
+
+        if (corsSettings is not null)
+        {
+            app.UseCors(corsSettings.PolicyName);
+        }
+
         app.UseAuthorization();
         
         return app;
@@ -34,6 +37,7 @@ public static class ApplicationBuilderExtensions
     public static IApplicationBuilder UseEndpoints(this IApplicationBuilder app)
     {
         app.UseRouting();
+
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();

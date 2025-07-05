@@ -1,6 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using UserManagement.Application.Interfaces;
 using UserManagement.Application.Services;
 using UserManagement.Application.Settings;
@@ -22,7 +20,6 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Configure settings
         services.Configure<DatabaseSettings>(
             configuration.GetSection(DatabaseSettings.SectionName));
         services.Configure<CorsSettings>(
@@ -30,18 +27,14 @@ public static class ServiceCollectionExtensions
         services.Configure<ExternalApiSettings>(
             configuration.GetSection(ExternalApiSettings.SectionName));
         
-        // Database
         var databaseSettings = configuration.GetSection(DatabaseSettings.SectionName).Get<DatabaseSettings>();
         services.AddDbContext<ApplicationDbContext>(options => 
             options.UseInMemoryDatabase(databaseSettings?.InMemoryDatabaseName ?? "UserManagementDb"));
         
-        // Repositories
         services.AddScoped<IUserRepository, UserRepository>();
         
-        // External services
         services.AddScoped<IExternalUserService, ExternalUserService>();
         
-        // Database seeding
         services.AddScoped<IDbSeeder, DbSeeder>();
         
         return services;
@@ -57,18 +50,21 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddCorsPolicy(this IServiceCollection services, IConfiguration configuration)
     {
         var corsSettings = configuration.GetSection(CorsSettings.SectionName).Get<CorsSettings>();
-        
-        services.AddCors(options =>
+
+        if (corsSettings != null)
         {
-            options.AddPolicy(corsSettings.PolicyName,
+            services.AddCors(options =>
+            {
+                options.AddPolicy(corsSettings.PolicyName,
                 policy =>
                 {
                     policy.WithOrigins(corsSettings.AngularAppOrigin)
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
                 });
-        });
-        
+            });
+        }
+
         return services;
     }
 } 

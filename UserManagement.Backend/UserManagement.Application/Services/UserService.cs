@@ -85,7 +85,6 @@ public class UserService(
             return null;
         }
 
-        // Check if email is being changed and if the new email already exists
         if (existingUser.Email != updateUserDto.Email)
         {
             var userWithNewEmail = await userRepository.GetUserByEmailAsync(updateUserDto.Email);
@@ -129,7 +128,6 @@ public class UserService(
             return false;
         }
 
-        // Validate that all user IDs exist
         foreach (var userId in userIds)
         {
             var user = await userRepository.GetUserByIdAsync(userId);

@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace UserManagement.Domain.Entities
 {
     public class User(

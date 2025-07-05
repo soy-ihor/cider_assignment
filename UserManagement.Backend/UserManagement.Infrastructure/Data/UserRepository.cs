@@ -5,23 +5,24 @@ using UserManagement.Domain.Interfaces;
 namespace UserManagement.Infrastructure.Data;
 
 public class UserRepository(
-    ApplicationDbContext context
-) : IUserRepository
+    ApplicationDbContext context) : IUserRepository
 {
-    public async Task<IEnumerable<User>> GetUsersAsync(string? nameFilter, string? emailFilter, int pageNumber, int pageSize)
+    public async Task<IEnumerable<User>> GetUsersAsync(
+        string? nameFilter,
+        string? emailFilter,
+        int pageNumber,
+        int pageSize)
     {
         var query = context.Users.Where(u => !u.IsDeleted);
 
         if (!string.IsNullOrWhiteSpace(nameFilter))
         {
-            var nameFilterLower = nameFilter.ToLower();
-            query = query.Where(u => u.Name.ToLower().Contains(nameFilterLower));
+            query = query.Where(u => u.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase));
         }
 
         if (!string.IsNullOrWhiteSpace(emailFilter))
         {
-            var emailFilterLower = emailFilter.ToLower();
-            query = query.Where(u => u.Email.ToLower().Contains(emailFilterLower));
+            query = query.Where(u => u.Email.Contains(emailFilter, StringComparison.CurrentCultureIgnoreCase));
         }
 
         var users = await query
@@ -39,14 +40,12 @@ public class UserRepository(
 
         if (!string.IsNullOrWhiteSpace(nameFilter))
         {
-            var nameFilterLower = nameFilter.ToLower();
-            query = query.Where(u => u.Name.ToLower().Contains(nameFilterLower));
+            query = query.Where(u => u.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase));
         }
 
         if (!string.IsNullOrWhiteSpace(emailFilter))
         {
-            var emailFilterLower = emailFilter.ToLower();
-            query = query.Where(u => u.Email.ToLower().Contains(emailFilterLower));
+            query = query.Where(u => u.Email.Contains(emailFilter, StringComparison.CurrentCultureIgnoreCase));
         }
 
         return await query.CountAsync();
@@ -82,8 +81,11 @@ public class UserRepository(
     public async Task<User?> UpdateUserAsync(int id, User user)
     {
         var existingUser = await context.Users.FirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted);
+
         if (existingUser == null)
+        {
             return null;
+        }
 
         existingUser.Name = user.Name;
         existingUser.Email = user.Email;
@@ -92,6 +94,7 @@ public class UserRepository(
         existingUser.UpdatedAt = DateTime.UtcNow;
 
         await context.SaveChangesAsync();
+
         return existingUser;
     }
 
@@ -103,6 +106,7 @@ public class UserRepository(
 
         user.IsDeleted = true;
         user.UpdatedAt = DateTime.UtcNow;
+
         await context.SaveChangesAsync();
         return true;
     }
@@ -114,7 +118,9 @@ public class UserRepository(
             .ToListAsync();
 
         if (users.Count != userIds.Count)
+        {
             return false;
+        }
 
         for (int i = 0; i < userIds.Count; i++)
         {

@@ -4,5 +4,5 @@ public class DatabaseSettings
 {
     public const string SectionName = "Database";
     
-    public string InMemoryDatabaseName { get; set; } = "UserManagementDb";
+    public string InMemoryDatabaseName { get; set; }
 } 
