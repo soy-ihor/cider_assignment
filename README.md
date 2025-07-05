@@ -62,17 +62,17 @@ The application will be available at `http://localhost:4200`
 
 ## API Endpoints
 
-| Method   | Endpoint              | Description                                 |
-| -------- | --------------------- | ------------------------------------------- |
-| `GET`    | `/api/users`          | Get paginated users with optional filtering |
-| `GET`    | `/api/users/{id}`     | Get user by ID                              |
-| `POST`   | `/api/users`          | Create new user                             |
-| `PUT`    | `/api/users/{id}`     | Update existing user                        |
-| `DELETE` | `/api/users/{id}`     | Delete user (soft delete)                   |
-| `PUT`    | `/api/users/reorder`  | Reorder users by drag and drop              |
-| `POST`   | `/api/users/generate` | Import users from JSONPlaceholder API       |
+| Method   | Endpoint                                                               | Description                                 |
+| -------- | ---------------------------------------------------------------------- | ------------------------------------------- |
+| `GET`    | `/api/users?name={name}&email={email}&page={page}&pageSize={pageSize}` | Get paginated users with optional filtering |
+| `GET`    | `/api/users/{id}`                                                      | Get user by ID                              |
+| `POST`   | `/api/users`                                                           | Create new user                             |
+| `PUT`    | `/api/users/{id}`                                                      | Update existing user                        |
+| `DELETE` | `/api/users/{id}`                                                      | Delete user (soft delete)                   |
+| `PUT`    | `/api/users/reorder`                                                   | Reorder users by drag and drop              |
+| `POST`   | `/api/users/generate`                                                  | Import users from JSONPlaceholder API       |
 
-### Query Parameters
+**Query Parameters for GET /api/users:**
 
 - `name` - Filter users by name (case-insensitive)
 - `email` - Filter users by email (case-insensitive)
