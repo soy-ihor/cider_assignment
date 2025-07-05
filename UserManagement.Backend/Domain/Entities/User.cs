@@ -1,33 +1,26 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace UserManagement.API.Domain.Entities
+namespace UserManagement.Domain.Entities
 {
-    public class User
+    public class User(
+        string name,
+        string email,
+        string username,
+        string avatarUrl,
+        int rank,
+        bool isDeleted,
+        DateTime createdAt,
+        DateTime? updatedAt = null
+    )
     {
         public int Id { get; set; }
-        
-        [Required]
-        [StringLength(100)]
-        public string Name { get; set; } = string.Empty;
-        
-        [Required]
-        [EmailAddress]
-        [StringLength(100)]
-        public string Email { get; set; } = string.Empty;
-        
-        [Required]
-        [StringLength(50)]
-        public string Username { get; set; } = string.Empty;
-        
-        [StringLength(500)]
-        public string AvatarUrl { get; set; } = string.Empty;
-        
-        public int Rank { get; set; }
-        
-        public bool IsDeleted { get; set; }
-        
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        
-        public DateTime? UpdatedAt { get; set; }
+        public string Name { get; set; } = name;
+        public string Email { get; set; } = email;
+        public string Username { get; set; } = username;
+        public string AvatarUrl { get; set; } = avatarUrl;
+        public int Rank { get; set; } = rank;
+        public bool IsDeleted { get; set; } = isDeleted;
+        public DateTime CreatedAt { get; set; } = createdAt;
+        public DateTime? UpdatedAt { get; set; } = updatedAt;
     }
 } 

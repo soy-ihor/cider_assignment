@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using UserManagement.API.Domain.Entities;
+using UserManagement.Domain.Entities;
 
-namespace UserManagement.API.Infrastructure.Data
+namespace UserManagement.Infrastructure.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
         {
         }
 

@@ -1,6 +1,6 @@
-using UserManagement.API.Application.DTOs;
+using UserManagement.Application.DTOs;
 
-namespace UserManagement.API.Application.Services
+namespace UserManagement.Application.Interfaces
 {
     public interface IUserService
     {
