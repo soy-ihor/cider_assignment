@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using UserManagement.Domain.Interfaces;
 
 namespace UserManagement.Infrastructure.Services;

@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Logging;
 using UserManagement.Application.DTOs;
+using UserManagement.Application.Extensions;
 using UserManagement.Application.Interfaces;
 using UserManagement.Domain.Entities;
 using UserManagement.Domain.Interfaces;
@@ -18,7 +20,7 @@ public class UserService(
         var totalCount = await userRepository.GetTotalCountAsync(nameFilter, emailFilter);
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
-        var userDtos = users.Select(MapToDto).ToList();
+        var userDtos = users.Select(u => u.ToDto()).ToList();
 
         return new PaginatedResponseDto<UserDto>(
             userDtos,
@@ -32,24 +34,17 @@ public class UserService(
     public async Task<UserDto?> GetUserByIdAsync(int id)
     {
         var user = await userRepository.GetUserByIdAsync(id);
-        return user != null ? MapToDto(user) : null;
+        return user?.ToDto();
     }
 
     public async Task<UserDto> CreateUserAsync(CreateUserDto createUserDto)
     {
-        var user = new User(
-            createUserDto.Name,
-            createUserDto.Email,
-            createUserDto.Username,
-            avatarService.GenerateGravatarUrl(createUserDto.Email),
-            0,
-            false,
-            DateTime.UtcNow
-        );
+        var avatarUrl = avatarService.GenerateGravatarUrl(createUserDto.Email);
+        var user = createUserDto.ToEntity(avatarUrl);
 
         var createdUser = await userRepository.CreateUserAsync(user);
         logger.LogInformation("Created user with ID: {Id}", createdUser.Id);
-        return MapToDto(createdUser);
+        return createdUser.ToDto();
     }
 
     public async Task<UserDto?> UpdateUserAsync(int id, UpdateUserDto updateUserDto)
@@ -59,21 +54,18 @@ public class UserService(
             return null;
 
         var oldEmail = existingUser.Email;
-        existingUser.Name = updateUserDto.Name;
-        existingUser.Email = updateUserDto.Email;
-        existingUser.Username = updateUserDto.Username;
-        if (oldEmail != updateUserDto.Email)
-        {
-            existingUser.AvatarUrl = avatarService.GenerateGravatarUrl(updateUserDto.Email);
-        }
-        existingUser.UpdatedAt = DateTime.UtcNow;
+        var avatarUrl = oldEmail != updateUserDto.Email 
+            ? avatarService.GenerateGravatarUrl(updateUserDto.Email)
+            : existingUser.AvatarUrl;
 
-        var updatedUser = await userRepository.UpdateUserAsync(id, existingUser);
-        if (updatedUser != null)
+        var updatedUser = updateUserDto.ToEntity(existingUser, avatarUrl);
+        var result = await userRepository.UpdateUserAsync(id, updatedUser);
+        
+        if (result != null)
         {
             logger.LogInformation("Updated user with ID: {Id}", id);
         }
-        return updatedUser != null ? MapToDto(updatedUser) : null;
+        return result?.ToDto();
     }
 
     public async Task<bool> DeleteUserAsync(int id)
@@ -100,18 +92,6 @@ public class UserService(
     {
         var users = await externalUserService.ImportUsersFromExternalApiAsync();
         logger.LogInformation("Imported {Count} users from JSONPlaceholder", users.Count);
-        return users.Select(MapToDto).ToList();
+        return users.Select(u => u.ToDto()).ToList();
     }
-
-    private static UserDto MapToDto(User user) =>
-        new(
-            user.Id,
-            user.Name,
-            user.Email,
-            user.Username,
-            user.AvatarUrl,
-            user.Rank,
-            user.CreatedAt,
-            user.UpdatedAt
-        );
 } 

@@ -4,6 +4,8 @@ using UserManagement.Application.Services;
 using UserManagement.Application.Interfaces;
 using UserManagement.Application.Settings;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
+using System.Net.Http.Json;
 
 namespace UserManagement.Infrastructure.Services;
 

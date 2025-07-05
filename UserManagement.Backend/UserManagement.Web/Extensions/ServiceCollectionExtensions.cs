@@ -60,10 +60,10 @@ public static class ServiceCollectionExtensions
         
         services.AddCors(options =>
         {
-            options.AddPolicy(corsSettings?.PolicyName ?? "AllowAngularApp",
+            options.AddPolicy(corsSettings.PolicyName,
                 policy =>
                 {
-                    policy.WithOrigins(corsSettings?.AngularAppOrigin ?? "http://localhost:4200")
+                    policy.WithOrigins(corsSettings.AngularAppOrigin)
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                 });
