@@ -94,7 +94,8 @@ export class UserListComponent implements OnInit {
 
   openUserForm(user?: User): void {
     const dialogRef = this.dialog.open(UserFormComponent, {
-      width: '500px',
+      width: '600px',
+      maxWidth: '90vw',
       data: user ? { user, isEdit: true } : { isEdit: false },
     });
 

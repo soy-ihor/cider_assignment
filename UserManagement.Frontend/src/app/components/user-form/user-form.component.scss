@@ -1,0 +1,44 @@
+.form-row {
+  margin-bottom: 16px;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+mat-dialog-content {
+  min-width: 400px;
+  max-width: 600px;
+  padding: 16px 0;
+}
+
+mat-dialog-actions {
+  padding: 16px 0;
+  margin: 0;
+}
+
+button[type="submit"] {
+  min-width: 100px;
+}
+
+.mat-mdc-dialog-actions {
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+// Responsive design
+@media (max-width: 600px) {
+  mat-dialog-content {
+    min-width: 300px;
+    max-width: 100%;
+    padding: 8px 0;
+  }
+
+  .form-row {
+    margin-bottom: 12px;
+  }
+
+  mat-dialog-actions {
+    padding: 12px 0;
+  }
+}
