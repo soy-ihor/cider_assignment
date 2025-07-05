@@ -66,29 +66,20 @@ export class UserFormComponent implements OnInit, OnDestroy {
       this.loading = true;
       const userData = this.userForm.value;
 
-      if (this.isEdit && this.data.user) {
-        this.userApi
-          .updateUser(this.data.user.id, userData)
-          .pipe(takeUntil(this.destroy$))
-          .subscribe({
-            next: () => {
-              this.showMessage('User updated successfully', 'success');
-              this.dialogRef.close(true);
-              this.loading = false;
-            },
-          });
-      } else {
-        this.userApi
-          .createUser(userData)
-          .pipe(takeUntil(this.destroy$))
-          .subscribe({
-            next: () => {
-              this.showMessage('User created successfully', 'success');
-              this.dialogRef.close(true);
-              this.loading = false;
-            },
-          });
-      }
+      const request$ =
+        this.isEdit && this.data.user
+          ? this.userApi.updateUser(this.data.user.id, userData)
+          : this.userApi.createUser(userData);
+
+      request$
+        .pipe(
+          takeUntil(this.destroy$),
+          finalize(() => (this.loading = false))
+        )
+        .subscribe(() => {
+          this.showMessage('User updated successfully', 'success');
+          this.dialogRef.close(true);
+        });
     }
   }
 

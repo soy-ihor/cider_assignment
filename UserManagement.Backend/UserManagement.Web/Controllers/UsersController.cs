@@ -6,141 +6,43 @@ namespace UserManagement.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UsersController(
-    IUserService userService,
-    ILogger<UsersController> logger
-) : ControllerBase
+public class UsersController(IUserService userService) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<PaginatedResponseDto<UserDto>>> GetUsers(
+    public Task<PaginatedResponseDto<UserDto>> GetUsers(
         [FromQuery] string? name,
         [FromQuery] string? email,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
-    {
-        try
-        {
-            if (page < 1) page = 1;
-            if (pageSize < 1 || pageSize > 100) pageSize = 10;
-
-            var result = await userService.GetUsersAsync(name, email, page, pageSize);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error getting users");
-            return StatusCode(500, "Internal server error");
-        }
-    }
+        => userService.GetUsersAsync(name, email, page, pageSize);
 
     [HttpGet("{id}")]
     public async Task<ActionResult<UserDto>> GetUser(int id)
     {
-        try
-        {
-            var user = await userService.GetUserByIdAsync(id);
-            if (user == null)
-                return NotFound();
-
-            return Ok(user);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error getting user with ID {Id}", id);
-            return StatusCode(500, "Internal server error");
-        }
+        var user = await userService.GetUserByIdAsync(id);
+        return user is null ? NotFound() : Ok(user);
     }
 
     [HttpPost]
-    public async Task<ActionResult<UserDto>> CreateUser([FromBody] CreateUserDto createUserDto)
-    {
-        try
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var user = await userService.CreateUserAsync(createUserDto);
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error creating user");
-            return StatusCode(500, "Internal server error");
-        }
-    }
+    public Task<UserDto> CreateUser([FromBody] CreateUserDto dto)
+        => userService.CreateUserAsync(dto);
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<UserDto>> UpdateUser(int id, [FromBody] UpdateUserDto updateUserDto)
+    public async Task<ActionResult<UserDto>> UpdateUser(int id, [FromBody] UpdateUserDto dto)
     {
-        try
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var user = await userService.UpdateUserAsync(id, updateUserDto);
-            if (user == null)
-                return NotFound();
-
-            return Ok(user);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error updating user with ID {Id}", id);
-            return StatusCode(500, "Internal server error");
-        }
+        var user = await userService.UpdateUserAsync(id, dto);
+        return user is null ? NotFound() : Ok(user);
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteUser(int id)
-    {
-        try
-        {
-            var success = await userService.DeleteUserAsync(id);
-            if (!success)
-                return NotFound();
-
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error deleting user with ID {Id}", id);
-            return StatusCode(500, "Internal server error");
-        }
-    }
+    public async Task<IActionResult> DeleteUser(int id)
+        => await userService.DeleteUserAsync(id) ? NoContent() : NotFound();
 
     [HttpPost("generate")]
-    public async Task<ActionResult<List<UserDto>>> GenerateUsers()
-    {
-        try
-        {
-            var importedUsers = await userService.ImportUsersFromJsonPlaceholderAsync();
-            return Ok(importedUsers);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error generating users from JSONPlaceholder");
-            return StatusCode(500, "Internal server error");
-        }
-    }
+    public Task<List<UserDto>> GenerateUsers()
+        => userService.ImportUsersFromJsonPlaceholderAsync();
 
     [HttpPut("reorder")]
-    public async Task<ActionResult> ReorderUsers([FromBody] ReorderUsersDto reorderDto)
-    {
-        try
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var success = await userService.ReorderUsersAsync(reorderDto.UserIds);
-            if (!success)
-                return BadRequest("Invalid user IDs provided");
-
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error reordering users");
-            return StatusCode(500, "Internal server error");
-        }
-    }
+    public async Task<IActionResult> ReorderUsers([FromBody] ReorderUsersDto dto)
+        => await userService.ReorderUsersAsync(dto.UserIds) ? NoContent() : BadRequest();
 } 

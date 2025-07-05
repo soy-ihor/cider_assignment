@@ -58,6 +58,12 @@ public class UserRepository(
             .FirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted);
     }
 
+    public async Task<User?> GetUserByEmailAsync(string email)
+    {
+        return await context.Users
+            .FirstOrDefaultAsync(u => u.Email == email && !u.IsDeleted);
+    }
+
     public async Task<User> CreateUserAsync(User user)
     {
         var maxRank = await context.Users
