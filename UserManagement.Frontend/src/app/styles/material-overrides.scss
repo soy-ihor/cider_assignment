@@ -1,0 +1,11 @@
+@import "./variables.scss";
+
+.mat-mdc-dialog-container {
+  .mat-mdc-dialog-content {
+    padding: $spacing-xl;
+  }
+}
+
+.mat-mdc-dialog-actions {
+  padding: $spacing-lg $spacing-xl;
+}

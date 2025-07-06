@@ -1,0 +1,11 @@
+@import "./variables.scss";
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.full-width {
+  width: 100%;
+}

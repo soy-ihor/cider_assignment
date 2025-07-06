@@ -1,0 +1,21 @@
+@import "./variables.scss";
+
+.success-snackbar {
+  background: $color-success;
+  color: white;
+}
+
+.error-snackbar {
+  background: $color-danger;
+  color: white;
+}
+
+.warning-snackbar {
+  background: $color-warning;
+  color: white;
+}
+
+.info-snackbar {
+  background: $color-info;
+  color: white;
+}

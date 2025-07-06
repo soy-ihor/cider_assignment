@@ -1,0 +1,98 @@
+@import "../../styles/variables.scss";
+
+.avatar-section {
+  margin-bottom: $spacing-lg;
+  padding: $spacing-md;
+  background-color: $color-avatar-section-bg;
+  border-radius: $border-radius;
+  border: 1px solid $color-avatar-section-border;
+
+  .avatar-container {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+
+    .avatar-preview {
+      width: $avatar-size-large;
+      height: $avatar-size-large;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid $color-background;
+      box-shadow: $avatar-shadow;
+    }
+
+    .avatar-info {
+      flex: 1;
+
+      .avatar-label {
+        margin: 0 0 $spacing-xs 0;
+        font-weight: $font-weight-medium;
+        color: $color-text-primary;
+        font-size: $font-size-sm;
+      }
+
+      .avatar-note {
+        margin: 0;
+        color: $color-text-secondary;
+        font-size: $font-size-xs;
+        font-style: italic;
+      }
+    }
+  }
+}
+
+.avatar-info-section {
+  margin-bottom: $spacing-lg;
+  padding: $spacing-md;
+  background-color: $color-avatar-info-bg;
+  border-radius: $border-radius;
+  border: 1px solid $color-avatar-info-border;
+
+  .avatar-info-container {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+
+    .avatar-icon {
+      color: $color-avatar-icon;
+      font-size: $font-size-xxl;
+      width: $font-size-xxl;
+      height: $font-size-xxl;
+    }
+
+    .avatar-info {
+      flex: 1;
+
+      .avatar-label {
+        margin: 0 0 $spacing-xs 0;
+        font-weight: $font-weight-medium;
+        color: $color-avatar-label;
+        font-size: $font-size-sm;
+      }
+
+      .avatar-note {
+        margin: 0;
+        color: $color-text-primary;
+        font-size: $font-size-xs;
+        font-style: italic;
+      }
+    }
+  }
+}
+
+.form-row {
+  margin-bottom: $spacing-lg;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+mat-dialog-actions {
+  padding: $dialog-padding 0;
+  justify-content: center;
+}
+
+button[type="submit"] {
+  min-width: $button-min-width;
+}

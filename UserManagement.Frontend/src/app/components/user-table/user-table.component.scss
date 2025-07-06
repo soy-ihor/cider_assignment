@@ -1,0 +1,87 @@
+@import "../../styles/variables.scss";
+
+.user-table-container {
+  padding: $container-padding;
+  max-width: $container-max-width;
+  margin: 0 auto;
+}
+
+.table-container {
+  margin-bottom: $spacing-xl;
+}
+
+table {
+  width: 100%;
+  border-radius: $border-radius;
+  overflow: hidden;
+  box-shadow: $box-shadow;
+}
+
+th {
+  background-color: $color-surface;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+td,
+th {
+  padding: $spacing-md $spacing-lg;
+  text-align: left;
+}
+
+.avatar {
+  width: $avatar-size;
+  height: $avatar-size;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.no-data {
+  text-align: center;
+  padding: $spacing-xxxxl;
+  color: $color-text-secondary;
+
+  mat-icon {
+    font-size: $icon-size;
+    width: $icon-size;
+    height: $icon-size;
+    color: $color-text-muted;
+    margin-bottom: $spacing-lg;
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-xxxxl;
+  color: $color-text-secondary;
+
+  p {
+    margin-top: $spacing-lg;
+  }
+}
+
+//drag-and-drop
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: $border-radius-sm;
+  box-shadow: $drag-shadow;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform $transition-duration $transition-timing;
+}
+
+.mat-mdc-row.cdk-drop-list-dragging .mat-mdc-row:not(.cdk-drag-placeholder) {
+  transition: transform $transition-duration $transition-timing;
+}
+
+.mat-mdc-row:hover {
+  background-color: $color-hover;
+  cursor: move;
+}
